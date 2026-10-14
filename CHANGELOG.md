@@ -1,5 +1,9 @@
 # Marketplace changelog
 
+## [1.3.1] — 2026-10-14
+
+- `lecture-artifacts` 0.3.5 → 0.3.6: description скилла `event-landing-build` без угловых скобок (предупреждение синхронизации claude.ai).
+
 ## [1.3.0] — 2026-10-14
 
 - Добавлен плагин `moderator` 0.1.0: сопровождение модератора образовательной программы — `/moderator:init`, `/moderator:capture`, `/moderator:build`, агент `artifact-digitizer`.

@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.3.6] — 2026-10-14
+
+- `event-landing-build`: из description убраны угловые скобки (`<event.output_dir>`) — claude.ai отклонял их как XML-теги при синхронизации.
+
 ## [0.3.5] — 2026-04-26
 
 - Event-landing timeline pill: вместо римской цифры/`String(artifactN)` (что приводило к `→ diagnostic-quiz` при ошибочном string-artifactN) теперь рендерится короткое название артефакта из `DATA.artifacts[].title` через lookup по `n === artifactN`. Fallback на Roman сохранён.

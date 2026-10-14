@@ -1,6 +1,6 @@
 ---
 name: event-landing-build
-description: Build the event landing page from `.claude/lecture-artifacts.local.md` and the actual contents of `<event.output_dir>/`. Idempotent — re-run after each new artefact is published. Used by /event-landing.
+description: Build the event landing page from `.claude/lecture-artifacts.local.md` and the actual contents of the event output folder (`event.output_dir`). Idempotent — re-run after each new artefact is published. Used by /event-landing.
 ---
 
 # Skill: event-landing-build
