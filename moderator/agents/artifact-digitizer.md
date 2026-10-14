@@ -1,24 +1,25 @@
 ---
 name: artifact-digitizer
-description: Use this agent to digitize one photo (or 2–3 photos of the same object) of a hand-made group artifact — flipchart, cards, stickers, filled handout — into structured text for the moderator report (any language). Dispatched in parallel by the `/moderator:build` skill during the digitization step; also usable directly when a moderator asks to "оцифровать флипчарт", "расшифровать карточки", "распознать стикеры с фото". Examples:
+description: |
+  Use this agent to digitize one photo (or 2–3 photos of the same object) of a hand-made group artifact — flipchart, cards, stickers, filled handout — into structured text for the moderator report (any language). Dispatched in parallel by the `/moderator:build` skill during the digitization step; also usable directly when a moderator asks to "оцифровать флипчарт", "расшифровать карточки", "распознать стикеры с фото". Examples:
 
-<example>
-Context: /moderator:build reached the digitization step; the moderator chose «Оцифровать сейчас».
-user: "Оцифровать сейчас"
-assistant: "Запускаю оцифровку 12 фото параллельно — по агенту на снимок."
-<commentary>
-The build skill dispatches one artifact-digitizer per photo in a single message, passing the jpg path, day, block context and the output path.
-</commentary>
-</example>
+  <example>
+  Context: /moderator:build reached the digitization step; the moderator chose «Оцифровать сейчас».
+  user: "Оцифровать сейчас"
+  assistant: "Запускаю оцифровку 12 фото параллельно — по агенту на снимок."
+  <commentary>
+  The build skill dispatches one artifact-digitizer per photo in a single message, passing the jpg path, day, block context and the output path.
+  </commentary>
+  </example>
 
-<example>
-Context: A moderator working in an event folder shares a single flipchart photo.
-user: "Расшифруй, пожалуйста, этот флипчарт: 01-артефакты/день-2_29-04/фото/3.HEIC"
-assistant: "Сначала конвертирую фото в jpg, затем передам его агенту artifact-digitizer."
-<commentary>
-A direct request to transcribe a hand-made artifact from a photo matches this agent.
-</commentary>
-</example>
+  <example>
+  Context: A moderator working in an event folder shares a single flipchart photo.
+  user: "Расшифруй, пожалуйста, этот флипчарт: 01-артефакты/день-2_29-04/фото/3.HEIC"
+  assistant: "Сначала конвертирую фото в jpg, затем передам его агенту artifact-digitizer."
+  <commentary>
+  A direct request to transcribe a hand-made artifact from a photo matches this agent.
+  </commentary>
+  </example>
 model: inherit
 color: cyan
 tools: ["Read", "Write"]

@@ -1,5 +1,9 @@
 # moderator changelog
 
+## [0.1.1] — 2026-10-14
+
+- `artifact-digitizer`: description во frontmatter переведён в блочный YAML-скаляр (`|`) — строгий парсер claude.ai не принимал блоки `<example>` с нулевым отступом.
+
 ## [0.1.0] — 2026-10-14
 
 - Первая версия: команды `/moderator:init`, `/moderator:capture`, `/moderator:build`.

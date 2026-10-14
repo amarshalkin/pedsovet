@@ -1,5 +1,9 @@
 # Marketplace changelog
 
+## [1.3.2] — 2026-10-14
+
+- `moderator` 0.1.0 → 0.1.1: frontmatter агента `artifact-digitizer` парсится строгим YAML (предупреждение синхронизации claude.ai).
+
 ## [1.3.1] — 2026-10-14
 
 - `lecture-artifacts` 0.3.5 → 0.3.6: description скилла `event-landing-build` без угловых скобок (предупреждение синхронизации claude.ai).
