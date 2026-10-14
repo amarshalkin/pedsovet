@@ -1,5 +1,9 @@
 # Marketplace changelog
 
+## [1.3.0] — 2026-10-14
+
+- Добавлен плагин `moderator` 0.1.0: сопровождение модератора образовательной программы — `/moderator:init`, `/moderator:capture`, `/moderator:build`, агент `artifact-digitizer`.
+
 ## [1.2.5] — 2026-04-26
 
 - `lecture-artifacts` 0.3.4 → 0.3.5: timeline pill показывает короткое название артефакта; ужесточён формат row для orchestrator.

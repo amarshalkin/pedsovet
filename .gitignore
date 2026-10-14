@@ -4,3 +4,7 @@
 node_modules/
 .env
 .env.local
+
+# moderator: real event data (personal data of participants)
+moderator/example/
+__pycache__/
