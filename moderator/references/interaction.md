@@ -76,7 +76,10 @@ understand what it is. Never save a re-encoded copy as the original.
 Remind gently and only when it helps the report:
 
 - Only about days that have started (`status.mjs` already filters this).
-- At most 3 reminders per run, most important first.
+- The missing day schedule is the exception: it is reminded after every capture
+  run, first, until it arrives or the moderator says to build from the program
+  (day-schedule.md «Reminding»). It does not count towards the limit below.
+- At most 3 other reminders per run, most important first.
 - Phrase as an option, not a demand: «За 29.04 пока нет фото проектной работы —
   если флипчарты сфотографированы, их можно добавить сейчас или позже».
 - Nothing is mandatory. If the moderator says «не будет» about an item, add a

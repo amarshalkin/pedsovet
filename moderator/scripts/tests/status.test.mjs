@@ -14,6 +14,7 @@ function makeWorkspace() {
       title: '28 апреля, вторник',
       slug: 'день-1_28-04',
       status: 'final',
+      schedule: { status: 'received', files: ['00-программа-и-материалы/программа/расписание-день-1_28-04.webp'] },
       blocks: [
         { id: 'd1b1', title: 'Установка на программу', kind: 'opening', in_report: true },
         { id: 'd1b2', title: 'Осмысление дня', kind: 'reflection', in_report: true },
@@ -113,10 +114,22 @@ test('collectStatus uses folder names from state.layout', () => {
   writeFileSync(join(root, '03-report', 'checklist.md'), '## Day 1 <!-- day:1 -->\n- [ ] Task\n');
   const s = collectStatus(root, { today: '2026-04-28' });
   assert.equal(s.days[0].photos.length, 1);
-  assert.deepEqual(s.days[0].gaps, []);
+  assert.deepEqual(s.days[0].gaps, ['no-day-schedule']);
   assert.equal(s.days[0].checklist.open, 1);
   assert.deepEqual(s.loose, [], 'custom layout folders are not reported as loose');
   assert.equal(s.language.report, 'en');
+});
+
+test('a day built from the program by choice is not reported as missing a schedule', () => {
+  const root = mkdtempSync(join(tmpdir(), 'moderator-prog-'));
+  mkdirSync(join(root, '.moderator'), { recursive: true });
+  writeFileSync(
+    join(root, '.moderator', 'state.json'),
+    JSON.stringify({ schema: 1, days: [{ n: 1, date: '2026-10-08', slug: 'день-1_08-10', schedule: { status: 'program' }, blocks: [] }] }),
+  );
+  const s = collectStatus(root, { today: '2026-10-09' });
+  assert.deepEqual(s.days[0].gaps, []);
+  assert.deepEqual(s.scheduleMissing, []);
 });
 
 test('collectStatus reports uninitialized folder', () => {
@@ -136,7 +149,10 @@ test('collectStatus counts materials, checklist and gaps', () => {
   assert.equal(d1.checklist.done, 2);
 
   assert.equal(d2.blocks, 2, 'blocks with in_report:false are excluded');
-  assert.deepEqual(d2.gaps, ['no-reflection', 'no-group-work-photos']);
+  assert.deepEqual(d2.gaps, ['no-day-schedule', 'no-reflection', 'no-group-work-photos'], 'missing schedule comes first');
+  assert.equal(d1.schedule, 'received');
+  assert.equal(d2.schedule, 'pending', 'schedule defaults to pending');
+  assert.deepEqual(s.scheduleMissing, [2], 'future days are not asked for a schedule');
   assert.equal(d2.checklist.open, 2);
 
   assert.equal(d3.started, false);

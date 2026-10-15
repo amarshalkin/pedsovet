@@ -80,7 +80,11 @@ Follow program-parsing.md:
    attached, into `установки/` and `документы/`. Loose files from `$PWD` root are
    moved there after the confirmation in step 1.
 2. Read every source, write `программа.md`, extract event name, location, dates.
-3. Fill `days[]` with all rows and the proposed `kind` / `in_report`.
+3. Fill `days[]` with all rows and the proposed `kind` / `in_report`; every day
+   gets `schedule: {status: "pending", files: [], received_at: null, changes: []}`
+   — even if the program came as per-day cards: these are the plan, the actual
+   schedule of each day is requested during the program
+   (`${CLAUDE_PLUGIN_ROOT}/references/day-schedule.md`).
 
 Missing essentials (year, event name): one self-contained `AskUserQuestion` or
 one chat line, then wait.
@@ -133,8 +137,11 @@ Set `setup_complete: true` only if the checklist exists. Save `state.json`, run
 - setup is complete (or: complete except the template — what that means);
 - the folder structure as a compact tree with days and dates;
 - how many blocks per day go into the report, where the checklist is;
+- the schedule of every day will be requested during the program: it often
+  changes, and the report is built on the slots of the actual day schedule —
+  a photo of the day's schedule from the briefing is enough;
 - during the program: `/moderator:capture` after a block or in the evening —
-  notes, photos, files, any amount; nothing is mandatory;
+  the day schedule, notes, photos, files, any amount; nothing else is mandatory;
 - after the program: `/moderator:build`.
 
 End the turn there — no dialog after the summary.

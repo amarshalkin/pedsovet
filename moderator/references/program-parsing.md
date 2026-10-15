@@ -57,6 +57,11 @@ Russian examples — apply the same categories to programs in any language:
 
 Rules of thumb:
 
+- Parallel tracks in one slot (two columns) → one block named after the first
+  track, the others in `parallel`.
+- These rules are also used for actual day schedules (day-schedule.md), where `?`
+  becomes `in_report: true` + `uncertain: true` instead of a question.
+
 - "Презентация мастер-классов" / "Презентация пособия" is a plenary item → `lecture`, default `?`.
 - A lecture is `?` by default. When a group discussion block of the lecture
   follows it, the discussion is `✓` and the lecture becomes `—` (the discussion

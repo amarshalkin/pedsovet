@@ -7,7 +7,7 @@
   },
   "metadata": {
     "description": "Маркетплейс плагинов для подготовки и проведения педагогических событий: проектирование групповой работы (group-work-toolkit), сборка HTML-артефактов из расшифровок лекций (lecture-artifacts) и сопровождение модератора с отчётом по программе (moderator).",
-    "version": "1.3.2"
+    "version": "1.4.0"
   },
   "plugins": [
     {
@@ -32,7 +32,7 @@
       "name": "moderator",
       "source": "./moderator",
       "description": "Сопровождение модератора образовательной программы: папка мероприятия по программе, фиксация рефлексии и артефактов по дням, пошаговая сборка отчёта модератора (.docx) с фото и оцифровкой флипчартов. 3 команды (init, capture, build), агент оцифровки.",
-      "version": "0.1.1",
+      "version": "0.2.0",
       "author": { "name": "Артём Маршалкин", "email": "artem.marshalkin@gmail.com" },
       "category": "education",
       "tags": ["education", "moderation", "report", "reflection", "flipchart"]

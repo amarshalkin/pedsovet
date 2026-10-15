@@ -30,6 +30,7 @@ names from `state.layout`.** Keep the numeric prefixes `00-`…`03-` in any lang
 | `day_slug` | `день-{n}_{DD}-{MM}` | `day-{n}_{DD}-{MM}` |
 | `checklist` | `03-отчет/чек-лист.md` | `03-report/checklist.md` |
 | `observations_file` | `наблюдения-модератора.md` | `moderator-observations.md` |
+| `schedule_file` | `расписание-{slug}` | `schedule-{slug}` |
 | `note_file` | `заметка-{HHMM}.md` | `note-{HHMM}.md` |
 
 ## Folder tree (default names)
@@ -39,7 +40,8 @@ names from `state.layout`.** Keep the numeric prefixes `00-`…`03-` in any lang
 ├── .moderator/
 │   └── state.json                     # single source of truth (schema below)
 ├── 00-программа-и-материалы/
-│   ├── программа/                     # original program files + программа.md (normalised)
+│   ├── программа/                     # original program files, программа.md (normalised),
+│   │                                  # расписание-<slug>.* — actual day schedules
 │   ├── установки/                     # установки на проход, briefs from the program director
 │   └── документы/                     # everything else general: group lists, guides, partner docs
 ├── 01-артефакты/
@@ -104,6 +106,7 @@ Rules:
     "day_slug": "день-{n}_{DD}-{MM}",
     "checklist": "03-отчет/чек-лист.md",
     "observations_file": "наблюдения-модератора.md",
+    "schedule_file": "расписание-{slug}",
     "note_file": "заметка-{HHMM}.md"
   },
   "event": {
@@ -129,6 +132,12 @@ Rules:
       "title": "28 апреля, вторник",
       "slug": "день-1_28-04",
       "status": "pending",
+      "schedule": {
+        "status": "received",
+        "files": ["00-программа-и-материалы/программа/расписание-день-1_28-04.webp"],
+        "received_at": "2026-04-28T09:20:00+03:00",
+        "changes": []
+      },
       "blocks": [
         {
           "id": "d1b1",
@@ -136,6 +145,22 @@ Rules:
           "title": "Открытие программы. Установка на программу",
           "kind": "opening",
           "in_report": true
+        },
+        {
+          "id": "d1b2",
+          "time": "19:00–20:20",
+          "title": "Проектная работа",
+          "kind": "group-work",
+          "in_report": true,
+          "parallel": ["Мастерская «Поддержка выпускников»"]
+        },
+        {
+          "id": "d1b3",
+          "time": "20:30–21:00",
+          "title": "Рефлексия выступления",
+          "kind": "reflection",
+          "in_report": true,
+          "uncertain": true
         }
       ]
     }
@@ -156,6 +181,12 @@ Rules:
 ```
 
 Field notes:
+
+- `days[].schedule`: the actual schedule of the day — `pending` (requested, blocks
+  from the program), `received` (blocks from the schedule), `program` (the
+  moderator chose the program). Details: day-schedule.md.
+- `blocks[].uncertain`: included by default but not yet confirmed by the moderator;
+  settled in the build draft questions. `blocks[].parallel`: parallel tracks of the slot.
 
 - `blocks_confirmed`: the moderator confirmed which blocks go into the report.
 - `structure_ready`: folders and days exist — `capture` works from this point.

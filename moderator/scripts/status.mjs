@@ -105,8 +105,15 @@ export function collectStatus(root, { today } = {}) {
     const done = sections.reduce((a, s) => a + s.done, 0);
     const blocks = (d.blocks ?? []).filter((b) => b.in_report !== false);
     const started = d.date ? d.date <= todayIso : false;
+    // pending: the day's actual schedule has not arrived yet (blocks come from the program);
+    // received: the moderator sent it; program: the moderator chose to build from the program.
+    const schedule = d.schedule?.status ?? 'pending';
 
     const gaps = [];
+    // First on purpose: blocks, photo matching and the checklist depend on the schedule.
+    if (started && schedule === 'pending') {
+      gaps.push('no-day-schedule');
+    }
     if (started && reflection.length === 0 && blocks.some((b) => REFLECTION_KINDS.has(b.kind))) {
       gaps.push('no-reflection');
     }
@@ -120,6 +127,7 @@ export function collectStatus(root, { today } = {}) {
       slug: d.slug,
       status: d.status ?? 'pending',
       started,
+      schedule,
       blocks: blocks.length,
       reflection,
       observations,
@@ -156,6 +164,7 @@ export function collectStatus(root, { today } = {}) {
     general: finalSections.map((s) => ({ title: s.title, done: s.done, open: s.open })),
     digitization: state.digitization ?? { status: 'pending' },
     loose,
+    scheduleMissing: days.filter((d) => d.gaps.includes('no-day-schedule')).map((d) => d.n),
   };
 }
 
@@ -164,11 +173,11 @@ function toMarkdown(s) {
   const lines = [];
   lines.push(`# Status: ${s.event.name ?? 'event'}  (today ${s.today})`);
   lines.push('');
-  lines.push('| Day | Date | Status | Blocks | Reflection | Photos | Files | Checklist | Gaps |');
-  lines.push('|---|---|---|---|---|---|---|---|---|');
+  lines.push('| Day | Date | Status | Schedule | Blocks | Reflection | Photos | Files | Checklist | Gaps |');
+  lines.push('|---|---|---|---|---|---|---|---|---|---|');
   for (const d of s.days) {
     lines.push(
-      `| ${d.n} | ${d.date ?? '—'} | ${d.status} | ${d.blocks} | ${d.reflection.length} | ${d.photos.length} | ${d.files.length} | ${d.checklist.done}/${d.checklist.done + d.checklist.open} | ${d.gaps.join('; ') || '—'} |`,
+      `| ${d.n} | ${d.date ?? '—'} | ${d.status} | ${d.schedule} | ${d.blocks} | ${d.reflection.length} | ${d.photos.length} | ${d.files.length} | ${d.checklist.done}/${d.checklist.done + d.checklist.open} | ${d.gaps.join('; ') || '—'} |`,
     );
   }
   lines.push('');

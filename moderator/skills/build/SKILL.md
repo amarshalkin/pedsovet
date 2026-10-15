@@ -15,7 +15,8 @@ Talk in the moderator's language; write the report in the template's language
 substitute folder names from `state.layout`. Read first:
 `${CLAUDE_PLUGIN_ROOT}/references/interaction.md`,
 `${CLAUDE_PLUGIN_ROOT}/references/workspace.md`,
-`${CLAUDE_PLUGIN_ROOT}/references/report-writing.md`. Load
+`${CLAUDE_PLUGIN_ROOT}/references/report-writing.md`,
+`${CLAUDE_PLUGIN_ROOT}/references/day-schedule.md`. Load
 `${CLAUDE_PLUGIN_ROOT}/references/digitization.md` at phase C.
 
 ## Phase 0 — orient
@@ -45,16 +46,26 @@ substitute folder names from `state.layout`. Read first:
 For each day in order, run the cycle below. Never start the next day before the
 current one is final. Each step ends the turn — no dialog after a draft or final.
 
+**A0. Day schedule** — only if the day's `schedule.status` is `pending`: ask the
+self-contained question from day-schedule.md «In build» («Пришлю расписание
+(рекомендую)» / «Строить по программе»). On «пришлю» end the turn; when the file
+arrives, apply it (day-schedule.md «Applying a received schedule») and continue
+with A1. On «по программе» set `schedule.status: program` and continue.
+
 **A1. Draft**
 
-1. Read the day's sources (report-writing.md «Sources for a day»).
+1. Read the day's sources (report-writing.md «Sources for a day»). The blocks
+   of the day are `days[].blocks` — from the received schedule, or from the
+   program when `schedule.status` is `program`.
 2. Photos: `node ${CLAUDE_PLUGIN_ROOT}/scripts/photo-dates.mjs 01-артефакты/<slug>/фото`
    (originals keep the capture time) to map them to blocks; convert for viewing
    with `bash ${CLAUDE_PLUGIN_ROOT}/scripts/convert-images.sh --out 03-отчет/оцифровка/jpg/<slug> 01-артефакты/<slug>/фото`;
    look at a few with `Read` to know what the group produced. Put `{{фото: …}}`
    markers into the blocks.
 3. Write `03-отчет/дни/день-<n>.черновик.md`; set the day `status: draft`.
-4. Present the full draft, then the «Вопросы к модератору» (max 5), and end the
+4. Present the full draft, then the «Вопросы к модератору» (max 5; blocks marked
+   `uncertain` go first: «Вели ли вы блок «Рефлексия выступления» со своей
+   группой? Если нет — уберу его из отчёта»), and end the
    turn with: «Это черновик дня <n> (<дата>). Напишите комментарии к тексту и свои
    наблюдения по этому дню — свободно, можно списком. Если всё верно — «ок».»
 

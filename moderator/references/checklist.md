@@ -121,4 +121,6 @@ Format rules (parsed by `status.mjs`):
   and «Фото и оцифровка» after digitization.
 - When the checklist is regenerated (new template), carry over `[x]` for every
   item whose text matches an old ticked item.
+- When a day schedule arrives or changes, only that day's section is rebuilt from
+  the new blocks, with the same carry-over (day-schedule.md).
 - Respect manual edits by the moderator: never untick an item the moderator ticked.

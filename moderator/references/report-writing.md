@@ -11,7 +11,9 @@ headings and examples below are Russian because the reference template is.
 2. `02-рефлексия/<slug>/` — reflection notes, observations (`наблюдения-модератора.md`).
 3. `00-программа-и-материалы/установки/` — the brief for the day: the main source
    for «Задача блока».
-4. `программа.md` — block titles exactly as in the program, times, speakers.
+4. `days[].blocks` — the day's slots: from the received day schedule, or from
+   the program when there is none (`schedule.status`). Block titles exactly as
+   written there; `программа.md` for places and speakers.
 5. `01-артефакты/<slug>/` — look at the photos (via converted jpg) to know what the
    group produced; files (presentations, docs) for content.
 6. `02-рефлексия/общие/`, `00-программа-и-материалы/документы/` — only when relevant.
