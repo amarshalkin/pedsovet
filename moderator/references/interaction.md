@@ -87,6 +87,16 @@ Remind gently and only when it helps the report:
   `"template"`) and never mention it again. «Позже» silences it for the current
   run only.
 
+## Signal words
+
+The moderator steers `build` with two words, introduced in the quick guide
+(user-guide.md) at the end of init — keep them stable everywhere:
+
+- **«готово»** — comments on a draft are finished, build the final;
+- **«дальше»** — the final is accepted, go to the next day / phase.
+
+Synonyms in any language are accepted, but always name these two in prompts.
+
 ## Progress tracking
 
 At the start of every multi-step run create tasks for the visible steps (for

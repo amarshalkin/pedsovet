@@ -1,51 +1,24 @@
-# Building the checklist from the template
+# Building the checklist from the profile
 
 `03-отчет/чек-лист.md` serves two purposes: a completeness check for the report
 and a navigation aid for the moderator during the program ("что ещё нужно
-зафиксировать сегодня"). It is derived from **the template the moderator
-provided** plus the confirmed program blocks — never from a hard-coded list.
+зафиксировать сегодня"). It is derived from **the report profile**
+(`03-отчет/шаблон/профиль.md`, see report-profile.md) plus the program blocks —
+never from a hard-coded list.
 
-## Step 1 — read the template
+## Step 1 — read the profile
 
-Extract text: `bash ${CLAUDE_PLUGIN_ROOT}/scripts/extract-text.sh <template>` and
-save it as `03-отчет/шаблон/шаблон.md`. Then identify four kinds of content:
+From `## Скелет` take:
 
 1. **Header fields** — e.g. «ФИО модератора», «Номер стола», «Список группы».
-2. **Per-block fields** — what each program block requires (e.g. «Название блока»,
-   «Задача блока», «Комментарий модератора» with its sub-points).
-3. **Per-day fields** — what closes a day (e.g. «Рефлексия дня»: «Тезисы
-   участников», «Комментарий модератора»).
-4. **End-of-program fields** — e.g. «Результат работы группы», «Комментарий
-   партнёра / экспертов», «Рефлексия программы», «Выводы по программе»,
-   «Список наиболее/наименее активных участников».
+2. **Per-block fields** — the `####` fields of a regular block (e.g. «Задача блока.»,
+   «Комментарий модератора») and whether artifacts belong in the block.
+3. **Per-day fields** — the fields of the reflection block that closes a day.
+4. **End-of-program fields** — the result/expert/reflection blocks and the level-2
+   sections after the days (conclusions, active/inactive participants).
 
-Also capture: artifact requirements («флипчарты (фото) и оцифрованное
-содержание»), formatting rules, length guidance («4–7 предложений по пункту»).
-Store a short summary at the top of `шаблон.md` under `## Структура (для плагина)`
-so `build` does not have to re-derive it. Example (from the reference template):
-
-```markdown
-## Структура (для плагина)
-- Заголовок: «Отчёт модератора Образовательного мероприятия» + название + адрес
-- Шапка: ФИО модератора; Номер стола; Список группы (если постоянная)
-- День: заголовок — дата ДД.ММ.ГГГГ
-- Блок: название как в программе → «Задача блока.» (1–3 предложения) →
-  «Комментарий модератора» (эмоции и динамика; содержание; позиция участников)
-- Артефакты в блоке: фото флипчарта + оцифрованное содержание
-- Конец дня: «Рефлексия дня» → «Тезисы участников (ключевые тезисы)» (дословно) →
-  «Комментарий модератора» (состояние группы, наблюдения, выводы участников)
-- Итоги: результат группы; комментарий партнёра/экспертов; комментарий модератора
-  к результату; рефлексия программы; комментарий модератора по программе (3 пункта);
-  наиболее / наименее активные участники
-- Оформление: Times New Roman 14, интервал 1; жирный — только заголовки; курсив —
-  ремарки модератора; списки «текст;» … «текст.»; без цвета и подчёркивания
-- Объём: по дням 4–7 предложений на пункт; итоги — развёрнуто
-```
-
-This example only shows the format. It never replaces a missing template.
-
-If the template is ambiguous (e.g. unclear whether «Рефлексия дня» is needed
-every day), ask the moderator once.
+From `## Правила полей` take one short hint per field for the checklist line
+(«Комментарий модератора: эмоции и динамика, содержание, позиция участников»).
 
 ## Step 2 — write the checklist
 
@@ -60,7 +33,7 @@ Format rules (parsed by `status.mjs`):
   where to drop files.
 - `### ` sub-headings group items by block inside a day.
 
-## Example (for the Машук-style template)
+## Example (for the default profile)
 
 ```markdown
 # Чек-лист отчёта модератора
@@ -119,7 +92,7 @@ Format rules (parsed by `status.mjs`):
   photo item, not the day's reflection item).
 - `build` ticks writing items when a day / the final section becomes `final`,
   and «Фото и оцифровка» after digitization.
-- When the checklist is regenerated (new template), carry over `[x]` for every
+- When the checklist is regenerated (new template or profile), carry over `[x]` for every
   item whose text matches an old ticked item.
 - When a day schedule arrives or changes, only that day's section is rebuilt from
   the new blocks, with the same carry-over (day-schedule.md).

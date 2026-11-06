@@ -1,6 +1,6 @@
 ---
 name: init
-description: This skill should be used when a moderator starts accompanying an educational program and runs "/moderator:init", or asks to "set up the event folder", "start the moderator report", "load the event program", "настроить папку мероприятия", "начать отчёт модератора", "загрузить программу мероприятия", "создать чек-лист отчёта модератора" (in any language). It requests the event program (text or document), creates the event folder structure (program and materials, artifacts by day with photos and files, reflection notes by day, report), requests the report template if it is missing, and builds a completeness checklist from it.
+description: This skill should be used when a moderator starts accompanying an educational program and runs "/moderator:init", or asks to "set up the event folder", "start the moderator report", "load the event program", "настроить папку мероприятия", "начать отчёт модератора", "загрузить программу мероприятия", "создать чек-лист отчёта модератора" (in any language). It requests the event program (text or document), creates the event folder structure (program and materials, artifacts by day with photos and files, reflection notes by day, report), offers the default report template or the moderator's own (compiled into a report profile), and builds a completeness checklist from it.
 argument-hint: "[путь к программе или текст программы]"
 allowed-tools: Read, Write, Edit, Glob, Grep, AskUserQuestion, TaskCreate, TaskUpdate, TaskList, TodoWrite, WebFetch, Bash(mkdir:*), Bash(cp:*), Bash(mv:*), Bash(ls:*), Bash(bash:*), Bash(node:*), Bash(python3:*)
 ---
@@ -108,23 +108,31 @@ report subfolders. Set `structure_ready: true` — from now on
 If other loose files lie in the folder root (photos, notes), only list them in
 the final message and suggest `/moderator:capture` — do not sort them here.
 
-## Step 5 — template and checklist
+## Step 5 — template, profile and checklist
 
-1. Look for a template: files in `$PWD` and `<program>/документы/` whose name
-   contains «шаблон» / «template» (`.docx`, `.doc`, `.pdf`, `.md`, `.pages`),
-   excluding the report folder.
-2. One or more found → self-contained `AskUserQuestion` listing them as options
-   plus «Другой — пришлю сам». Declined or none found → **always ask**: end the
-   turn with «Пришлите шаблон отчёта модератора (docx, pdf, ссылку или текст) —
-   по нему я составлю чек-лист и структуру отчёта.» Never substitute a template
-   of your own (the examples in references are not templates).
-   If the moderator says the template will come later: keep
-   `template.source: null`, skip to step 6 and say that the checklist will be
-   built when the template arrives (re-run `/moderator:init`).
-3. Copy the template into `03-отчет/шаблон/`, extract its text to `шаблон.md`, add
-   the «Структура (для плагина)» summary, write the checklist
-   (checklist.md), update `state.template` and `state.language.report`.
-4. Header fields (ФИО, номер стола, список группы): mention in the final message
+Read `${CLAUDE_PLUGIN_ROOT}/references/report-profile.md` first.
+
+1. Look for a template-like file: files in `$PWD` and `<program>/документы/`
+   whose name contains «шаблон» / «template» (`.docx`, `.doc`, `.pdf`, `.md`,
+   `.pages`), excluding the report folder.
+2. Ask which template to use — one self-contained `AskUserQuestion`, exactly as
+   report-profile.md «Choosing the template» describes: «Шаблон по умолчанию
+   (рекомендую)» / «Загружу свой шаблон» (a found file comes first as «Использовать
+   найденный: <имя>»).
+3. Then:
+   - **default** → copy `${CLAUDE_PLUGIN_ROOT}/assets/templates/default/профиль.md` and `шаблон.md`
+     into `03-отчет/шаблон/` (report-profile.md «Default profile»);
+   - **own / found** → wait for the file if needed (end the turn with «Пришлите
+     шаблон отчёта (docx, pdf, ссылку или текст)»), then compile the profile
+     (report-profile.md «Compiling a profile…»): reuse the default profile when it is
+     the same template, otherwise write `профиль.md`, show the summary and end the
+     turn for «ок» or corrections.
+   - The moderator wants to decide later → keep `template.source: null`, skip to
+     step 6 and say the checklist will be built once the template is chosen
+     (re-run `/moderator:init`).
+4. Write the checklist from the profile (`${CLAUDE_PLUGIN_ROOT}/references/checklist.md`), update
+   `state.template` and `state.language.report`.
+5. Header fields (ФИО, номер стола, список группы): mention in the final message
    that they can be sent any time via `/moderator:capture`. If the moderator has
    already given them, store in `state.moderator` and tick the checklist items.
 
@@ -134,15 +142,13 @@ Set `setup_complete: true` only if the checklist exists. Save `state.json`, run
 `node ${CLAUDE_PLUGIN_ROOT}/scripts/status.mjs --json`, then tell the moderator
 (short, in the dialogue language):
 
-- setup is complete (or: complete except the template — what that means);
-- the folder structure as a compact tree with days and dates;
-- how many blocks per day go into the report, where the checklist is;
-- the schedule of every day will be requested during the program: it often
-  changes, and the report is built on the slots of the actual day schedule —
-  a photo of the day's schedule from the briefing is enough;
-- during the program: `/moderator:capture` after a block or in the evening —
-  the day schedule, notes, photos, files, any amount; nothing else is mandatory;
-- after the program: `/moderator:build`.
+1. **Summary:** setup is complete (or: complete except the template — what that
+   means); the folder structure as a compact tree with days and dates; how many
+   blocks per day go into the report.
+2. **Quick guide:** the text from `${CLAUDE_PLUGIN_ROOT}/references/user-guide.md`,
+   in the dialogue language, with the real folder names. Always show it in full —
+   it is the only place where the moderator learns the signal words («готово»,
+   «дальше») and the `/moderator:build` variants.
 
 End the turn there — no dialog after the summary.
 

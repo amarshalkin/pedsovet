@@ -1,9 +1,12 @@
 # Writing the report
 
-The structure always follows `03-отчет/шаблон/шаблон.md` (section «Структура
-(для плагина)»). The rules below describe how to fill it; when the template
-disagrees with them, the template wins. Write in `state.language.report`; the
-headings and examples below are Russian because the reference template is.
+The structure, the field rules, the formatting and the tone come from the report
+profile `03-отчет/шаблон/профиль.md` (report-profile.md): `## Скелет` is followed
+exactly, every field is written by `## Правила полей` in the manner of
+`## Примеры`. This file covers what does not depend on the template: sources,
+drafts and finals, placeholders, assembly mechanics. When the profile disagrees
+with it, the profile wins. Write in `state.language.report`; the examples below are
+Russian because the default profile is.
 
 ## Sources for a day, in priority order
 
@@ -49,16 +52,15 @@ where they were said, and say so in the draft if uncertain.
 > 2. …
 ```
 
-- Use the program's exact block title as `###`, the template's field names as `####`.
-- «Задача блока.» — 1–3 sentences. Derive from установки and the program; if
-  neither says anything, write a cautious version and mark it `[[проверить]]`.
-- «Комментарий модератора» — follow the template sub-points (emotional state and
-  dynamics; content: theses discussed and conclusions; participants' positions).
-  4–7 sentences per point when material allows; never pad. Plain observational
-  prose in the third person about the group («Группа…», «Участники…»).
-- «Тезисы участников» — verbatim from notes (see interaction.md «Never invent»).
-  Each thesis is a list item ending with a period. Keep the moderator's markers
-  like «(мастер-класс)», «(лекция)» if they are in the notes; expand «мк» → «мастер-класс».
+- The block title as `###` exactly as in the day's blocks; the field names as the
+  profile's skeleton gives them.
+- Fill each field by its rule in `## Правила полей` (purpose, sources, length,
+  tone); match the level of detail of `## Примеры`, never copy them.
+- A field whose source is thin: write only what the material supports; a field
+  that should be derived (e.g. a block's task from установки) but has no source:
+  a cautious version marked `[[проверить]]`.
+- Participants' quotes are verbatim (interaction.md «Never invent»); keep the
+  moderator's markers like «(мастер-класс)», expand «мк» → «мастер-класс».
 - Placeholders `[[нужно: …]]` for every missing piece; collect them into the
   «Вопросы к модератору» quote block at the end of the draft (max 5 questions,
   most important first).
@@ -82,14 +84,11 @@ Same structure, with the moderator's comments and observations merged in:
 
 ## Final section (`03-отчет/дни/итоги.черновик.md` → `итоги.md`)
 
-Fill the template's end-of-program fields. Typical sources: the last day's
-presentation materials, expert comments (ask — they are rarely in notes), the
-final reflection, the moderator's own debrief, the whole-program picture from
-all final day files. «Комментарий модератора по программе» is the most
-analytical part: shift in the group from the first to the last day, what the
-moderator did for it, what worked in the program, what to consider next time,
-insights about the target audience. Lists of active/inactive participants use
-names from `moderator.group`; ask before writing anything negative about a person.
+Fill the profile's end-of-program part of the skeleton by its field rules. Typical
+sources: the last day's presentation materials, expert comments (ask — they are
+rarely in notes), the final reflection, the moderator's own debrief, the
+whole-program picture from all final day files. Names come from
+`moderator.group`; ask before writing anything negative about a person.
 
 ## Assembly (`03-отчет/сборка/отчет.md`)
 
@@ -98,35 +97,9 @@ have no `in_report` blocks (arrival/departure days). Links come from the `.md`
 link stubs in every `файлы/` folder plus `state.digitization.source` when the
 digitization came from a link.
 
-Take the title and the header fields from `шаблон.md` «Структура (для плагина)»;
-the block below shows the reference template.
-
-```markdown
-# Отчёт модератора Образовательного мероприятия
-
-<event.name>
-
-<event.location>
-
-ФИО модератора: <name>
-
-Номер стола: <table>
-
-Список группы:
-
-- <Фамилия И. О.>;
-- <Фамилия И. О.>.
-
-<day finals, each starting with "## DD.MM.YYYY">
-
-<итоги.md>
-
-## Ссылки
-
-- <title>: <url>
-
-## Приложение. Артефакты работы группы
-```
+The title, the header fields and the order of the closing sections come from the
+profile's `## Скелет`: header (slots filled from `state.event` and
+`state.moderator`) → the day finals → `итоги.md` → links → appendix.
 
 Artifacts:
 
@@ -145,13 +118,10 @@ Artifacts:
   cards as a pipe table `| № | Тип | Распознанный текст |`.
 - Group photos (people at work) get a caption only, no digitization.
 
-Formatting rules from the template (applied by markdown + `reference.docx`):
-
-- Bold only for headings — never use `**bold**` in body text.
-- Italic `*…*` only for moderator remarks that must stand apart from the text.
-- Moderator's own lists: lowercase items ending with `;`, the last with `.`.
-  Participant theses keep their own capitalisation and end with `.`.
-- No underline, no colours, no HTML.
+Formatting follows the profile's `## Оформление`; fonts and spacing come from
+`reference.docx` at build time, so the markdown never sets them. Check the
+assembled file with `lint-report.mjs --mode report` (report-profile.md «How build
+uses the profile») before building.
 
 Build: `bash ${CLAUDE_PLUGIN_ROOT}/scripts/build-docx.sh 03-отчет/сборка/отчет.md "03-отчет/Отчет_модератора_<Фамилия>_<И>_стол_<N>.docx" --lang ru-RU`
 (`--lang` = the report language as a BCP 47 tag; it sets spell-check language in Word).

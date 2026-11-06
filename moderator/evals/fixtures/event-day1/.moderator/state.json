@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "blocks_confirmed": true,
+  "structure_ready": true,
+  "setup_complete": true,
+  "dismissed_reminders": [],
+  "language": { "dialogue": "ru", "report": "ru" },
+  "event": {
+    "name": "Форум молодых педагогов «Восход»",
+    "location": "Учебный центр «Восход», корпус А",
+    "dates": "12.11.2026 — 15.11.2026"
+  },
+  "moderator": { "name": "Ирина Соколова", "table": "7", "group": ["Белова А. С.", "Гусев П. Н.", "Демидова О. В.", "Котов Р. А."] },
+  "template": {
+    "kind": "default",
+    "source": "03-отчет/шаблон/шаблон.md",
+    "text": "03-отчет/шаблон/шаблон.md",
+    "profile": "03-отчет/шаблон/профиль.md",
+    "checklist": "03-отчет/чек-лист.md"
+  },
+  "days": [
+    {
+      "n": 1,
+      "date": "2026-11-12",
+      "title": "12 ноября, четверг",
+      "slug": "день-1_12-11",
+      "status": "collecting",
+      "schedule": { "status": "received", "files": [], "received_at": "2026-11-12T09:10:00+03:00", "changes": [] },
+      "blocks": [
+        { "id": "d1b1", "time": "16:00–17:30", "title": "Открытие программы, установка на работу", "kind": "opening", "in_report": true },
+        { "id": "d1b2", "time": "17:30–18:00", "title": "Знакомство", "kind": "opening", "in_report": true },
+        { "id": "d1b3", "time": "20:30–21:30", "title": "Представление проектных идей команд", "kind": "presentation", "in_report": true },
+        { "id": "d1b4", "time": "21:30–22:00", "title": "Осмысление дня", "kind": "reflection", "in_report": true }
+      ]
+    }
+  ],
+  "final_section": { "status": "pending" },
+  "digitization": { "mode": null, "source": null, "status": "pending" },
+  "report": { "markdown": null, "docx": null },
+  "log": []
+}

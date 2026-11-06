@@ -55,7 +55,7 @@ names from `state.layout`.** Keep the numeric prefixes `00-`…`03-` in any lang
 │   ├── общие/                         # notes not tied to a day (moderators' own debrief)
 │   └── день-1_28-04/                  # reflection notes of the day (any format)
 └── 03-отчет/
-    ├── шаблон/                        # the report template (original) + шаблон.md (text)
+    ├── шаблон/                        # the template (original), шаблон.md (text), профиль.md (for the model)
     ├── чек-лист.md                    # completeness checklist and navigation (see checklist.md)
     ├── дни/                           # день-1.черновик.md → день-1.md, итоги.черновик.md → итоги.md
     ├── оцифровка/                     # jpg/<slug>/ converted photos, <slug>/<photo>.md, оцифровка.md
@@ -121,8 +121,10 @@ Rules:
     "group": []
   },
   "template": {
-    "source": "03-отчет/шаблон/Шаблон отчета модератора.docx",
+    "kind": "default",
+    "source": "03-отчет/шаблон/шаблон.md",
     "text": "03-отчет/шаблон/шаблон.md",
+    "profile": "03-отчет/шаблон/профиль.md",
     "checklist": "03-отчет/чек-лист.md"
   },
   "days": [
@@ -200,7 +202,9 @@ Field notes:
 - `days[].blocks[].kind`: `opening`, `day-setup`, `group-work`, `discussion`,
   `reflection`, `presentation`, `masterclass`, `lecture`, `other`.
   `in_report: false` keeps the block in the program record but out of the report.
-- `template.source` is `null` until the moderator sends the template.
+- `template.kind`: `default` (the plugin's template) or `custom` (the moderator's,
+  compiled into a profile); `source` is `null` until the template is chosen;
+  `profile` is the file every draft follows (report-profile.md).
 - `final_section` covers the template's end-of-program sections (results of the
   group, expert comments, conclusions, active/inactive participants).
 - `digitization.mode`: `agents` | `link` | `file` | `none`; `source` is the URL

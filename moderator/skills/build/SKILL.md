@@ -22,9 +22,12 @@ substitute folder names from `state.layout`. Read first:
 ## Phase 0 — orient
 
 1. No `.moderator/state.json` or `structure_ready: false` → suggest
-   `/moderator:init` and stop. No template (`template.source` null or no
-   `шаблон.md`) → end the turn asking for it, as in init step 5 (always ask, never
-   substitute); continue once it arrives (copy, extract, checklist).
+   `/moderator:init` and stop. No profile yet (`template.profile` missing)
+   → ask the template question of init step 5 (default or own), set up the
+   profile and checklist, then continue.
+   Read `03-отчет/шаблон/профиль.md` — it is the structure, field rules, style and
+   examples every draft follows — and `${CLAUDE_PLUGIN_ROOT}/references/report-profile.md` «How
+   build uses the profile».
 2. Read `node ${CLAUDE_PLUGIN_ROOT}/scripts/status.mjs --json`.
 3. Pick the starting point:
    - `$ARGUMENTS` = «день N» → redo that day (even if final); «итоги» → phase B;
@@ -67,21 +70,35 @@ with A1. On «по программе» set `schedule.status: program` and conti
    `uncertain` go first: «Вели ли вы блок «Рефлексия выступления» со своей
    группой? Если нет — уберу его из отчёта»), and end the
    turn with: «Это черновик дня <n> (<дата>). Напишите комментарии к тексту и свои
-   наблюдения по этому дню — свободно, можно списком. Если всё верно — «ок».»
+   наблюдения по этому дню — можно несколькими сообщениями. Когда закончите,
+   напишите «готово» — соберу чистовик дня.»
 
-**A2. Final** — on the moderator's reply
+**A1a. Comments** — the moderator may answer in several messages. For each
+message that is not the signal: apply it to the draft file, answer in one line
+what was taken («Учёл: динамика на проектной работе, 2 тезиса в рефлексию») and
+end the turn. Do not show the whole draft again and do not build the final.
+If a message both comments and ends with the signal, apply the comments and go
+to A2.
+
+**A2. Final** — on the explicit signal: «готово», «чистовик», «собирай», «ок»,
+«всё верно» (or the same meaning in the dialogue language). When unsure whether a
+short reply is the signal or a comment, treat it as a comment and remind once:
+«Когда закончите с комментариями — напишите «готово».»
 
 1. Merge comments and observations (report-writing.md «Day final»); unanswered
    placeholders stay.
-2. Write `03-отчет/дни/день-<n>.md`; set `status: final`; tick the day's writing
-   items in the checklist; save program-wide remarks to
-   `02-рефлексия/общие/наблюдения-модератора.md`.
-3. Present the final version in full, name any placeholders left, and end the
+2. Write `03-отчет/дни/день-<n>.md`.
+3. Check it: `node ${CLAUDE_PLUGIN_ROOT}/scripts/lint-report.mjs 03-отчет/дни/день-<n>.md --profile 03-отчет/шаблон/профиль.md`.
+   Fix every ERROR except placeholders the moderator left unanswered; fix WARNs when
+   the material allows. Run the check again after fixing (at most twice).
+4. Set `status: final`; tick the day's writing items in the checklist; save
+   program-wide remarks to `02-рефлексия/общие/наблюдения-модератора.md`.
+5. Present the final version in full, name any placeholders left, and end the
    turn with: «Финальная версия дня <n>. Если нужно что-то поправить — напишите;
    если всё хорошо — «дальше», и я перейду к дню <n+1>.»
 
-**A3. Next** — on «дальше» (or equivalent) complete the task and go to A1 of the
-next day. On corrections, update the final and present it again (A2.3).
+**A3. Next** — on «дальше» (or equivalent) complete the task and go to A0/A1 of
+the next day. On corrections, update the final and present it again (A2.3).
 
 If the moderator wants to stop, stop: the state is saved, and the next
 `/moderator:build` resumes from the first non-final day.
@@ -89,7 +106,8 @@ If the moderator wants to stop, stop: the state is saved, and the next
 ## Phase B — end of program
 
 The same cycle for the template's end-of-program sections (report-writing.md
-«Final section»): `итоги.черновик.md` → comments → `итоги.md`. In the draft's
+«Final section»): `итоги.черновик.md` → comments (any number of messages) →
+«готово» → `итоги.md`. In the draft's
 questions ask explicitly for what notes rarely contain: expert/partner comments
 on the group's presentation, the most and least active participants. After the
 final: set `final_section.status: final`, tick the «Итоги программы» items,
@@ -106,14 +124,14 @@ Show uncertain fragments and end the turn for corrections; apply them. Save
 
 ## Phase D — assembly
 
-1. Header: `state.moderator` and `state.event`. Fields the template requires but
-   that are missing (ФИО, номер стола, список группы) → ask in one chat message
-   and end the turn.
-2. Compose `03-отчет/сборка/отчет.md` exactly as report-writing.md «Assembly»
-   describes (photos, markers, links, appendix).
-3. Remaining `[[нужно` / `[[проверить` placeholders → list them with day and block
-   and end the turn: «Собрать с пометками или сначала допишете?». Also make sure
-   body text has no `**bold**`.
+1. Header: `state.moderator` and `state.event`. Header fields of the profile's
+   skeleton that are missing (ФИО, номер стола, список группы) → ask in one chat
+   message and end the turn.
+2. Compose `03-отчет/сборка/отчет.md` following the profile's `## Скелет` and
+   report-writing.md «Assembly» (photos, markers, links, appendix).
+3. Check: `node ${CLAUDE_PLUGIN_ROOT}/scripts/lint-report.mjs 03-отчет/сборка/отчет.md --profile 03-отчет/шаблон/профиль.md --mode report`.
+   Fix ERRORs. Remaining placeholders → list them with day and block and end the
+   turn: «Собрать с пометками или сначала допишете?».
 4. Build with the command from report-writing.md (`build-docx.sh … --lang <report
    language>`). «missing image» → fix the path, rebuild. Over ~25 MB → the
    re-compress command from report-writing.md, rebuild.
@@ -128,6 +146,7 @@ Show uncertain fragments and end the turn for corrections; apply them. Save
 ## Additional resources
 
 - `${CLAUDE_PLUGIN_ROOT}/scripts/` — `convert-images.sh`, `photo-dates.mjs`,
-  `extract-text.sh`, `status.mjs`, `build-docx.sh` (+ `postprocess-docx.py`).
+  `extract-text.sh`, `status.mjs`, `lint-report.mjs`, `build-docx.sh` (+ `postprocess-docx.py`).
+- `03-отчет/шаблон/профиль.md` — the report profile (structure, field rules, style, examples, checks).
 - `${CLAUDE_PLUGIN_ROOT}/assets/reference.docx` — styles of the output document.
 - `${CLAUDE_PLUGIN_ROOT}/agents/artifact-digitizer.md` — digitization agent.

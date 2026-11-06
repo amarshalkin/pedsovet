@@ -1,0 +1,52 @@
+{
+  "plugin_name": "moderator",
+  "plugin_version": "0.4.0",
+  "notes": "Fixtures are fictional («Восход»). Run each eval in an empty temp folder; copy the listed fixtures first. Baseline: the same prompt without the plugin.",
+  "evals": [
+    {
+      "id": 1,
+      "skill": "init",
+      "name": "init-default-template",
+      "prompt": "/moderator:init — программа во вложении. Шаблона отчёта у меня нет.",
+      "files": ["fixtures/program.md"],
+      "setup": "Empty event folder with program.md in it. When asked about blocks, answer «ок»; when asked about the template, choose the default.",
+      "expected_behavior": [
+        "Shows the per-day table of proposed blocks and ends the turn before any dialog; meals, check-in, morning exercise and the excursion are hidden",
+        "Asks the template question as one self-contained AskUserQuestion with «Шаблон по умолчанию (рекомендую)» first and «Загружу свой шаблон» second",
+        "Copies assets/templates/default/профиль.md and шаблон.md into 03-отчет/шаблон/ and sets state.template.kind = default and state.template.profile",
+        "Builds 03-отчет/чек-лист.md from the profile: header items, one section per day ending with <!-- day:N -->, block items with «Задача блока» and «Комментарий модератора», reflection items with verbatim theses, an end-of-program section",
+        "Every day gets schedule.status = pending; the final message contains the quick guide with «готово» and «дальше» and ends without a dialog"
+      ]
+    },
+    {
+      "id": 2,
+      "skill": "build",
+      "name": "build-day1-draft-and-final",
+      "prompt": "/moderator:build",
+      "files": ["fixtures/event-day1/"],
+      "setup": "Copy fixtures/event-day1/ as the event folder and copy assets/templates/default/* into 03-отчет/шаблон/. After the draft, reply: «На открытии Котов молчал, но к знакомству включился», then «готово».",
+      "expected_behavior": [
+        "The draft follows the profile skeleton: «## 12.11.2026», one ### per in-report block in schedule order, #### fields named exactly as in the profile",
+        "Theses under «Осмысление дня» are the notes' lines verbatim with only typos/punctuation fixed and «мк» expanded; no invented theses",
+        "Missing facts become [[нужно: …]] placeholders and at most 5 questions; the turn ends asking for comments and «готово»",
+        "The first comment is applied to the draft with a one-line acknowledgement; the final is built only after «готово»",
+        "lint-report.mjs on день-1.md reports no ERROR except placeholders the moderator left unanswered; the final is shown and the turn ends with «дальше»"
+      ]
+    },
+    {
+      "id": 3,
+      "skill": "init",
+      "name": "init-custom-template-profile",
+      "prompt": "Хочу использовать свой шаблон отчёта — вот он.",
+      "files": ["fixtures/custom-template.md", "fixtures/event-day1/"],
+      "setup": "Event folder from fixtures/event-day1/ with template fields removed from state.json (template.source = null, setup_complete = false); custom-template.md attached.",
+      "expected_behavior": [
+        "Recognises the template is not the default one and compiles 03-отчет/шаблон/профиль.md with the five parts: Скелет, Правила полей, Оформление, Примеры, Проверки",
+        "The skeleton keeps the template's own headings and order (Цель занятия, Наблюдения куратора, Цитаты ребят, Итог смены …); the bracketed instructions move to the field rules and are absent from the skeleton",
+        "The checks json uses the custom field names (e.g. thesis_fields = «Цитаты ребят») and parses with lint-report.mjs",
+        "Shows a compact summary of the understood structure and ends the turn asking for corrections or «ок» before writing the checklist",
+        "Sets state.template.kind = custom"
+      ]
+    }
+  ]
+}
