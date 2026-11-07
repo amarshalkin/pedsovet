@@ -8,3 +8,7 @@ node_modules/
 # moderator: real event data (personal data of participants)
 moderator/example/
 __pycache__/
+
+# review package: binaries are sent separately, not versioned
+docs/moderator-review-ru/*.mp4
+docs/moderator-review-ru.zip
