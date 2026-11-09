@@ -123,12 +123,36 @@ Formatting follows the profile's `## Оформление`; fonts and spacing co
 assembled file with `lint-report.mjs --mode report` (report-profile.md «How build
 uses the profile») before building.
 
-Build: `bash ${CLAUDE_PLUGIN_ROOT}/scripts/build-docx.sh 03-отчет/сборка/отчет.md "03-отчет/Отчет_модератора_<Фамилия>_<И>_стол_<N>.docx" --lang ru-RU`
+Build: `bash ${CLAUDE_PLUGIN_ROOT}/scripts/build-docx.sh 03-отчет/сборка/отчет.md "03-отчет/<file name>" --lang ru-RU`
 (`--lang` = the report language as a BCP 47 tag; it sets spell-check language in Word).
 If the docx is larger than ~25 MB, re-compress and rebuild:
 `bash ${CLAUDE_PLUGIN_ROOT}/scripts/convert-images.sh --force --max 1280 --quality 70 --out 03-отчет/сборка/images/<slug> 01-артефакты/<slug>/фото`
 for every day (and `общие`), then run the build command again.
 
-File name: follow the template's naming if it gives one; otherwise
-`Отчет_модератора_<Фамилия>_<И>_стол_<N>.docx`, without `_стол_<N>` when there is
-no table number. Write both paths into `state.report`.
+File name: `node ${CLAUDE_PLUGIN_ROOT}/scripts/report-filename.mjs --json` (reads
+`.moderator/state.json`) → `file`. The formula:
+
+`Отчет_модератора_<Фамилия>_<И.О.>_<стол_N | столы_N_M>_<программа>_<даты>.docx`,
+e.g. `Отчет_модератора_Маршалкин_А.С._стол_9_директор_на_высоте_02.11-05.11.2026.docx`.
+
+- Name — `state.moderator.name_short` («Маршалкин А.С.»), else parsed from
+  `state.moderator.name`. Warning `name-order` (two full words, order unclear) →
+  set `name_short` yourself when the order is obvious, otherwise ask with the
+  header question.
+- Tables — `state.moderator.tables` or `table`: one → `стол_9`, several →
+  `столы_9_10`.
+- Program — `state.event.short_name` if set; otherwise the quoted proper name
+  from `state.event.name` («Директор на высоте»), or the name without subtitle and
+  year; lowercase, words joined by `_`, at most 30 characters, cut by whole words
+  (`shortened: true`). A cut that loses the sense → write a better
+  `state.event.short_name` (up to 30 characters, recognisable to the program
+  team) and run the script again.
+- Dates — the first and last day of the program: `02.11-05.11.2026`,
+  `30.12.2026-02.01.2027` across years, `02.11.2026` for one day.
+- A part with no data is left out and listed in `missing`.
+- Report not in Russian: the labels follow `state.language.report` (`en`:
+  `Moderator_report`, `table`, `tables`); for another language pass
+  `--labels "<prefix>,<table>,<tables>"` translated.
+
+The moderator's own template prescribes another naming → follow the template.
+Write both paths into `state.report`.

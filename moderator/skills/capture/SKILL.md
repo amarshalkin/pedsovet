@@ -102,7 +102,8 @@ Do not ask about items classified with confidence.
   destination (`cmp -s`); for different files with the same name add ` (2)`.
 - Pasted text → new `.md` files (workspace.md); links → `.md` stubs; a public
   document link may be `WebFetch`ed once for a short summary in the stub.
-- Header data → `state.moderator`.
+- Header data → `state.moderator`. With the full name also store `name_short` as
+  «Фамилия И.О.» (for the file name); several tables → «9, 10» in `table`.
 - Day schedule / schedule change → apply as day-schedule.md describes (no
   comparison with the program, no confirmation questions). Apply schedules
   **before** filing the other items of the batch, so photos and notes of that day

@@ -124,29 +124,33 @@ Show uncertain fragments and end the turn for corrections; apply them. Save
 
 ## Phase D — assembly
 
-1. Header: `state.moderator` and `state.event`. Header fields of the profile's
-   skeleton that are missing (ФИО, номер стола, список группы) → ask in one chat
-   message and end the turn.
+1. Header: `state.moderator` and `state.event`. Run
+   `node ${CLAUDE_PLUGIN_ROOT}/scripts/report-filename.mjs --json`. Header fields of
+   the profile's skeleton that are missing (ФИО, номер стола, список группы) and
+   a `name-order` warning you cannot settle yourself → ask in one chat message and
+   end the turn.
 2. Compose `03-отчет/сборка/отчет.md` following the profile's `## Скелет` and
    report-writing.md «Assembly» (photos, markers, links, appendix).
 3. Check: `node ${CLAUDE_PLUGIN_ROOT}/scripts/lint-report.mjs 03-отчет/сборка/отчет.md --profile 03-отчет/шаблон/профиль.md --mode report`.
    Fix ERRORs. Remaining placeholders → list them with day and block and end the
    turn: «Собрать с пометками или сначала допишете?».
 4. Build with the command from report-writing.md (`build-docx.sh … --lang <report
-   language>`). «missing image» → fix the path, rebuild. Over ~25 MB → the
+   language>`), the output named by `report-filename.mjs` (report-writing.md «File
+   name»; shortened program name → check it still makes sense). «missing image» → fix the path, rebuild. Over ~25 MB → the
    re-compress command from report-writing.md, rebuild.
 5. Verify: `bash ${CLAUDE_PLUGIN_ROOT}/scripts/extract-text.sh <docx> | head -60`
    shows the header and the first day; `unzip -l <docx>` lists images under
    `word/media/` (identical images are stored once, so fewer than the links is fine).
 6. Save `state.report`, run `status.mjs --json`, and finish with a short summary:
-   path and size of the docx, days included, number of photos and digitized
+   path, name and size of the docx (a shortened program name can be changed on
+   request: `state.event.short_name`, then rebuild), days included, number of photos and digitized
    artifacts, open checklist items, and a reminder that the final check of the
    wording is the moderator's.
 
 ## Additional resources
 
 - `${CLAUDE_PLUGIN_ROOT}/scripts/` — `convert-images.sh`, `photo-dates.mjs`,
-  `extract-text.sh`, `status.mjs`, `lint-report.mjs`, `build-docx.sh` (+ `postprocess-docx.py`).
+  `extract-text.sh`, `status.mjs`, `lint-report.mjs`, `report-filename.mjs`, `build-docx.sh` (+ `postprocess-docx.py`).
 - `03-отчет/шаблон/профиль.md` — the report profile (structure, field rules, style, examples, checks).
 - `${CLAUDE_PLUGIN_ROOT}/assets/reference.docx` — styles of the output document.
 - `${CLAUDE_PLUGIN_ROOT}/agents/artifact-digitizer.md` — digitization agent.

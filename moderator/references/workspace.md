@@ -60,7 +60,7 @@ names from `state.layout`.** Keep the numeric prefixes `00-`…`03-` in any lang
     ├── дни/                           # день-1.черновик.md → день-1.md, итоги.черновик.md → итоги.md
     ├── оцифровка/                     # jpg/<slug>/ converted photos, <slug>/<photo>.md, оцифровка.md
     ├── сборка/                        # отчет.md + images/ — the exact pandoc input
-    └── Отчет_модератора_<Фамилия>_<И>_стол_<N>.docx
+    └── Отчет_модератора_<Фамилия>_<И.О.>_стол_<N>_<программа>_<даты>.docx
 ```
 
 Rules:
@@ -111,12 +111,14 @@ Rules:
   },
   "event": {
     "name": "Семинар-практикум «Весенний педсовет’26»",
+    "short_name": null,
     "location": "Ставропольский край, г. Пятигорск, ул. Пионерлагерная, 8В",
     "dates": "28.04.2026 — 01.05.2026",
     "program_file": "00-программа-и-материалы/программа/программа.md"
   },
   "moderator": {
     "name": null,
+    "name_short": null,
     "table": null,
     "group": []
   },
@@ -194,7 +196,13 @@ Field notes:
 - `structure_ready`: folders and days exist — `capture` works from this point.
   `setup_complete`: the template and checklist exist too — init has finished.
 - `dismissed_reminders`: keys of reminders the moderator declined for good.
-- `report.markdown` / `report.docx`: written by `build` phase D.
+- `report.markdown` / `report.docx`: written by `build` phase D; the docx name
+  comes from `scripts/report-filename.mjs` (report-writing.md «File name»).
+- `moderator.name_short`: «Фамилия И.О.» for the file name, stored together with
+  `moderator.name`. `moderator.table`: one number, or several («9, 10»; an array
+  in `moderator.tables` also works).
+- `event.short_name`: optional short program name for the file name (≤ 30
+  characters); empty → derived from `event.name`.
 
 - `days[].status`: `pending` → `collecting` (something captured) → `draft`
   (draft written) → `final` (moderator accepted). `build` resumes from the first
