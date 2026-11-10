@@ -36,6 +36,15 @@
       "author": { "name": "Артём Маршалкин", "email": "artem.marshalkin@gmail.com" },
       "category": "education",
       "tags": ["education", "moderation", "report", "reflection", "flipchart"]
+    },
+    {
+      "name": "moderator-local-probe",
+      "source": "./moderator-local-probe",
+      "description": "ВРЕМЕННЫЙ: проба доставки локального модуля moderator-local. Будет удалён.",
+      "version": "0.0.1",
+      "author": { "name": "Артём Маршалкин", "email": "artem.marshalkin@gmail.com" },
+      "category": "education",
+      "tags": ["probe"]
     }
   ]
 }

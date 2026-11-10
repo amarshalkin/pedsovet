@@ -1,0 +1,7 @@
+{
+  "name": "moderator-local-probe",
+  "version": "0.0.1",
+  "description": "ВРЕМЕННЫЙ: проба доставки локального модуля moderator-local. Будет удалён.",
+  "author": { "name": "Артём Маршалкин", "email": "artem.marshalkin@gmail.com" },
+  "mcpServers": "./moderator-local.mcpb"
+}
